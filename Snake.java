@@ -40,7 +40,6 @@ public class Snake {
     }
 
     public void grow() {
-        bodyLength++;
         bodyParts++;
     }
 

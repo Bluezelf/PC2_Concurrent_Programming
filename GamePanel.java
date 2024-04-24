@@ -54,32 +54,30 @@ public class GamePanel extends JPanel implements ActionListener {
 
     public void draw(Graphics g) {
         if (running) {
-            // Dibujar cuadrícula
-            for (int i = 0; i < HEIGHT / UNIT_SIZE; i++) {
-                g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, HEIGHT);
-                g.drawLine(0, i * UNIT_SIZE, WIDTH, i * UNIT_SIZE);
+
+            for(int i = 0; i < HEIGHT/UNIT_SIZE; i++){
+                g.drawLine(i*UNIT_SIZE,0,i*UNIT_SIZE, HEIGHT);
+                g.drawLine(0,i*UNIT_SIZE, WIDTH, i*UNIT_SIZE);
             }
 
-            // Dibujar comida
             g.setColor(Color.red);
             g.fillOval(foodX, foodY, UNIT_SIZE, UNIT_SIZE);
 
-            // Dibujar serpiente
-            for (int i = 0; i < bodyParts; i++) {
+            for (int i = 0; i < snake.getBodyParts(); i++) {
                 if (i == 0) {
                     g.setColor(Color.green);
-                    g.fillRect(X[i], Y[i], UNIT_SIZE, UNIT_SIZE);
+                    g.fillRect(snake.getX()[i], snake.getY()[i], UNIT_SIZE, UNIT_SIZE);
                 } else {
                     g.setColor(new Color(0, 180, 9, 160));
-                    g.fillRect(X[i], Y[i], UNIT_SIZE, UNIT_SIZE);
+                    g.fillRect(snake.getX()[i], snake.getY()[i], UNIT_SIZE, UNIT_SIZE);
                 }
             }
 
-            // Mostrar puntaje
             g.setColor(Color.red);
             g.setFont(new Font("Century", Font.BOLD, 30));
             FontMetrics metrics = getFontMetrics(g.getFont());
             g.drawString("Puntaje: " + foodEaten, (WIDTH - metrics.stringWidth("Puntaje: " + foodEaten)) / 2, 100);
+
         } else {
             gameOver(g);
         }
