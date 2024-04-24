@@ -11,19 +11,28 @@ public class GamePanel extends JPanel implements ActionListener {
     static final int GAME_UNITS = (WIDTH * HEIGHT) / UNIT_SIZE;
     static final int DELAY = 75;
 
-    private final int[] snakeX = new int[GAME_UNITS];
-    private final int[] snakeY = new int[GAME_UNITS];
-    private Snake snake;
+    private final int[] X;
+    private final int[] Y;
+    private int bodyParts;
+    private int foodEaten;
     private int foodX;
     private int foodY;
-    private int foodEaten;
-    private boolean running = false;
+    private char direction;
+    private boolean running;
     private Timer timer;
     private Random random;
+    private Snake snake;
 
     GamePanel() {
         random = new Random();
-        snake = new Snake(0, 0, GAME_UNITS);
+
+        snake = new Snake(0, 0, GAME_UNITS); // Creamos la serpiente en la posición inicial (0, 0)
+        X = snake.getX();
+        Y = snake.getY();
+        direction = 'R';
+        bodyParts = 6;
+        running = false;
+        timer = new Timer(DELAY, this);
 
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setBackground(Color.black);
@@ -35,7 +44,6 @@ public class GamePanel extends JPanel implements ActionListener {
     public void startGame() {
         addFood();
         running = true;
-        timer = new Timer(DELAY, this);
         timer.start();
     }
 
@@ -46,29 +54,32 @@ public class GamePanel extends JPanel implements ActionListener {
 
     public void draw(Graphics g) {
         if (running) {
+            // Dibujar cuadrícula
             for (int i = 0; i < HEIGHT / UNIT_SIZE; i++) {
                 g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, HEIGHT);
                 g.drawLine(0, i * UNIT_SIZE, WIDTH, i * UNIT_SIZE);
             }
 
+            // Dibujar comida
             g.setColor(Color.red);
             g.fillOval(foodX, foodY, UNIT_SIZE, UNIT_SIZE);
 
-            for (int i = 0; i < snake.getBodyParts(); i++) {
+            // Dibujar serpiente
+            for (int i = 0; i < bodyParts; i++) {
                 if (i == 0) {
                     g.setColor(Color.green);
-                    g.fillRect(snakeX[i], snakeY[i], UNIT_SIZE, UNIT_SIZE);
+                    g.fillRect(X[i], Y[i], UNIT_SIZE, UNIT_SIZE);
                 } else {
                     g.setColor(new Color(0, 180, 9, 160));
-                    g.fillRect(snakeX[i], snakeY[i], UNIT_SIZE, UNIT_SIZE);
+                    g.fillRect(X[i], Y[i], UNIT_SIZE, UNIT_SIZE);
                 }
             }
 
+            // Mostrar puntaje
             g.setColor(Color.red);
             g.setFont(new Font("Century", Font.BOLD, 30));
             FontMetrics metrics = getFontMetrics(g.getFont());
             g.drawString("Puntaje: " + foodEaten, (WIDTH - metrics.stringWidth("Puntaje: " + foodEaten)) / 2, 100);
-
         } else {
             gameOver(g);
         }
