@@ -11,13 +11,10 @@ public class GamePanel extends JPanel implements ActionListener {
     static final int GAME_UNITS = (WIDTH * HEIGHT) / UNIT_SIZE;
     static final int DELAY = 75;
 
-    private final int[] X;
-    private final int[] Y;
-    private int bodyParts;
     private int foodEaten;
     private int foodX;
     private int foodY;
-    private char direction;
+
     private boolean running;
     private Timer timer;
     private Random random;
@@ -26,11 +23,8 @@ public class GamePanel extends JPanel implements ActionListener {
     GamePanel() {
         random = new Random();
 
-        snake = new Snake(0, 0, GAME_UNITS); // Creamos la serpiente en la posición inicial (0, 0)
-        X = snake.getX();
-        Y = snake.getY();
-        direction = 'R';
-        bodyParts = 6;
+        snake = new Snake(4);
+
         running = false;
         timer = new Timer(DELAY, this);
 
@@ -54,21 +48,21 @@ public class GamePanel extends JPanel implements ActionListener {
 
     public void draw(Graphics g) {
         if (running) {
-
+            checkCollision();
             for(int i = 0; i < HEIGHT/UNIT_SIZE; i++){
                 g.drawLine(i*UNIT_SIZE,0,i*UNIT_SIZE, HEIGHT);
                 g.drawLine(0,i*UNIT_SIZE, WIDTH, i*UNIT_SIZE);
             }
 
-            g.setColor(Color.red);
+            g.setColor(Color.white);
             g.fillOval(foodX, foodY, UNIT_SIZE, UNIT_SIZE);
 
             for (int i = 0; i < snake.getBodyParts(); i++) {
                 if (i == 0) {
-                    g.setColor(Color.green);
+                    g.setColor(snake.getHeadColor());
                     g.fillRect(snake.getX()[i], snake.getY()[i], UNIT_SIZE, UNIT_SIZE);
                 } else {
-                    g.setColor(new Color(0, 180, 9, 160));
+                    g.setColor(snake.getTailColor());
                     g.fillRect(snake.getX()[i], snake.getY()[i], UNIT_SIZE, UNIT_SIZE);
                 }
             }
@@ -77,7 +71,6 @@ public class GamePanel extends JPanel implements ActionListener {
             g.setFont(new Font("Century", Font.BOLD, 30));
             FontMetrics metrics = getFontMetrics(g.getFont());
             g.drawString("Puntaje: " + foodEaten, (WIDTH - metrics.stringWidth("Puntaje: " + foodEaten)) / 2, 100);
-
         } else {
             gameOver(g);
         }
@@ -108,6 +101,7 @@ public class GamePanel extends JPanel implements ActionListener {
         }
 
         if ((snake.getX()[0] < 0) || (snake.getX()[0] > WIDTH) || (snake.getY()[0] < 0) || (snake.getY()[0] > HEIGHT)) {
+            System.out.println("Collision tipo 2");
             running = false;
         }
 
@@ -130,10 +124,12 @@ public class GamePanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        System.out.println(e.getActionCommand());
         if (running) {
             move();
             checkFood();
             checkCollision();
+
         }
         repaint();
     }
