@@ -6,20 +6,19 @@ public class Snake {
     private final int[] Y;
     private char direction;
     private int bodyParts;
-    private Color headColor;
-    private Color tailColor;
+    private int score = 0;
+    boolean alive;
 
     public Snake(int playerNumber){
         this.playerNumber = playerNumber;
         this.X = new int[Server.unitWidth * Server.unitHeight];
         this.Y = new int[Server.unitWidth * Server.unitHeight];
         this.bodyParts = 6;
+        this.alive = true;
 
         switch (playerNumber){
             case 1:
                 this.direction = 'R';
-                this.headColor = new Color(190,0,0);
-                this.tailColor = new Color(190,0,0,160);
                 for(int i = 0; i < bodyParts; i++){
                     X[i] = bodyParts - i - 1;
                     Y[i] = 0;
@@ -27,8 +26,6 @@ public class Snake {
                  break;
             case 2:
                 this.direction = 'D';
-                this.headColor = new Color(0,190,0);
-                this.tailColor = new Color(0,190,0,160);
                 for(int i = 0; i < bodyParts; i++){
                     X[i] = Server.unitWidth - 1;
                     Y[i] = bodyParts - i - 1;
@@ -36,8 +33,6 @@ public class Snake {
                 break;
             case 3:
                 this.direction = 'L';
-                this.headColor = new Color(0,0,190);
-                this.tailColor = new Color(0,0,190,160);
                 for(int i = 0; i < bodyParts; i++){
                     X[i] = Server.unitWidth - bodyParts + i;
                     Y[i] = Server.unitHeight - 1;
@@ -45,8 +40,6 @@ public class Snake {
                 break;
             case 4:
                 this.direction = 'U';
-                this.headColor = new Color(190,190,0);
-                this.tailColor = new Color(190,190,0,160);
                 for(int i = 0; i < bodyParts; i++){
                     X[i] = 0;
                     Y[i] = Server.unitHeight - bodyParts + i;
@@ -73,15 +66,19 @@ public class Snake {
             case 'R':
                 X[0] += 1;
                 break;
-            default:
+            case 'N':
                 break;
         }
     }
 
     public void grow() {
         bodyParts++;
+        score++;
     }
 
+    public void killSnake(){
+
+    }
     public int[] getX() {
         return X;
     }
@@ -101,8 +98,8 @@ public class Snake {
     public int getBodyParts() {
         return bodyParts;
     }
+    public void setBodyParts(int bodyParts) { this.bodyParts = bodyParts; }
+    public int getScore(){ return score; }
+    public boolean isAlive(){ return alive; }
 
-    public Color getHeadColor(){ return headColor; }
-
-    public Color getTailColor(){ return tailColor; }
 }

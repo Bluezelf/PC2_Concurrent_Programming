@@ -9,7 +9,9 @@ public class ClientPanel extends JPanel {
     static final int UNIT_SIZE_W = WIDTH / Server.unitWidth;
     static final int UNIT_SIZE_H = HEIGHT / Server.unitHeight;
     int sentKeyCode;
+    int finalScore;
     int[][] coloredTiles = null;
+    boolean gameOver = false;
     Color[] colors = {new Color(190,0,0,160),
             new Color(0,190,0,160),
             new Color(0,0,190,160),
@@ -29,10 +31,15 @@ public class ClientPanel extends JPanel {
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        draw(g);
+        if(!gameOver){
+            drawGame(g);
+        }
+        else{
+            drawGameOver(g);
+        }
     }
 
-    public void draw(Graphics g){
+    public void drawGame(Graphics g){
         for(int i = 0; i < Server.unitWidth; i++){
             g.drawLine(i*UNIT_SIZE_W,0,i*UNIT_SIZE_W, HEIGHT);
         }
@@ -43,15 +50,18 @@ public class ClientPanel extends JPanel {
 
             for(int[] tile : coloredTiles){
                 g.setColor(colors[tile[0] - 1]);
-                System.out.println("Using color number" + (tile[0] - 1));
                 g.fillRect(tile[1] * UNIT_SIZE_W, tile[2] * UNIT_SIZE_H, UNIT_SIZE_W, UNIT_SIZE_H);
             }
         }
     }
-
+    public void drawGameOver(Graphics g){
+        g.setColor(Color.red);
+        g.setFont(new Font("Century", Font.BOLD, 30));
+        FontMetrics metrics = getFontMetrics(g.getFont());
+        g.drawString("Puntaje: " + finalScore, 100, 100);
+    }
 
     public void stringToBoard(String boardId){
-        System.out.println(boardId);
         String[] elements = boardId.split(";");
         coloredTiles = new int[elements.length][3];
         for(int i = 0; i < elements.length; i++){
@@ -62,6 +72,12 @@ public class ClientPanel extends JPanel {
             }
             coloredTiles[i] = tile;
         }
+        repaint();
+    }
+
+    public void gameOver(int score){
+        finalScore = score;
+        gameOver = true;
         repaint();
     }
     public int sendKeyCode(){

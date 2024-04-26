@@ -8,6 +8,7 @@ public class Client {
     private DataOutputStream out = null;
     Client(String address, int port){
         try {
+            boolean runClient = true;
             socket = new Socket(address, port);
             System.out.println("Connected");
 
@@ -19,11 +20,22 @@ public class Client {
             frame.setVisible(true);
 
 
-            while(true){
+            while(runClient){
                 String received = in.readUTF();
-                panel.stringToBoard(received);
-                int toSend = panel.sendKeyCode();
-                out.writeInt(toSend);
+                if(received.matches("GameOver(.*)")){
+                    int score = Integer.parseInt(received.substring(8));
+                    panel.gameOver(score);
+                    runClient = false;
+                    socket.close();
+                    //int toSend = panel.sendKeyCode();
+                    //out.writeInt(toSend);
+                }
+                else{
+                    panel.stringToBoard(received);
+                    int toSend = panel.sendKeyCode();
+                    out.writeInt(toSend);
+                }
+
             }
 
         } catch (UnknownHostException e){
@@ -35,11 +47,6 @@ public class Client {
     }
     public static void main(String[] args) throws Exception {
         Client cliente = new Client("127.0.0.1", 5000);
-    }
-
-
-    public void gameOver(){
-
     }
 
 }
