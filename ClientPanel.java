@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class TestPanel extends JPanel {
+public class ClientPanel extends JPanel {
     static final int WIDTH = 600;
     static final int HEIGHT = 600;
     static final int UNIT_SIZE_W = WIDTH / Server.unitWidth;
@@ -15,7 +15,7 @@ public class TestPanel extends JPanel {
             new Color(0,0,190,160),
             new Color(190,190,0,160),
             Color.white};
-    TestPanel(){
+    ClientPanel(){
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setBackground(Color.black);
         this.setFocusable(true);
@@ -51,7 +51,7 @@ public class TestPanel extends JPanel {
 
 
     public void stringToBoard(String boardId){
-        System.out.println("BoardID Received");
+        System.out.println(boardId);
         String[] elements = boardId.split(";");
         coloredTiles = new int[elements.length][3];
         for(int i = 0; i < elements.length; i++){

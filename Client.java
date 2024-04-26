@@ -2,11 +2,11 @@
 import java.io.*;
 import java.net.*;
 
-public class Cliente{
+public class Client {
     private Socket socket = null;
     private DataInputStream in = null;
     private DataOutputStream out = null;
-    Cliente(String address, int port){
+    Client(String address, int port){
         try {
             socket = new Socket(address, port);
             System.out.println("Connected");
@@ -14,7 +14,7 @@ public class Cliente{
             in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
             out = new DataOutputStream(socket.getOutputStream());
             ClientFrame frame = new ClientFrame();
-            TestPanel panel = new TestPanel();
+            ClientPanel panel = new ClientPanel();
             frame.add(panel);
             frame.setVisible(true);
 
@@ -34,7 +34,7 @@ public class Cliente{
 
     }
     public static void main(String[] args) throws Exception {
-        Cliente cliente = new Cliente("127.0.0.1", 5000);
+        Client cliente = new Client("127.0.0.1", 5000);
     }
 
 
